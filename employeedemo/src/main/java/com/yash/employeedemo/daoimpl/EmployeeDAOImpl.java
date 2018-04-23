@@ -6,6 +6,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import com.yash.employeedemo.dao.EmployeeDAO;
 import com.yash.employeedemo.model.Employee;
 import com.yash.employeedemo.util.DBUtil;
@@ -13,6 +15,7 @@ import com.yash.employeedemo.util.DBUtil;
 public class EmployeeDAOImpl implements EmployeeDAO {
 	
 	private DBUtil dbUtil;
+	private static final Logger LOGGER=Logger.getLogger(EmployeeDAOImpl.class);
 	
 	public EmployeeDAOImpl() {
 		this.dbUtil = new DBUtil(); 
@@ -29,7 +32,7 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 			success = pstmt.executeUpdate();
 			pstmt.close();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			LOGGER.error(e.getMessage());
 		}
 		return success;
 	}
@@ -52,7 +55,7 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 			rs.close();
 			pstmt.close();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			LOGGER.error(e.getMessage());
 		}
 		return employees;
 	}
