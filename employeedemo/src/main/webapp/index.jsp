@@ -7,7 +7,7 @@
 <body>
 	<h2>Hello World !</h2>
 	<a href="ListEmployeesController"><button>List All Employees</button></a>
-	
+	<br/><br/>
 	<form action="AddEmployeeController" method="POST">
 		<table>
 			<tr>
