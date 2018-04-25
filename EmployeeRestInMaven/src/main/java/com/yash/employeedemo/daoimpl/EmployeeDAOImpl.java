@@ -27,7 +27,7 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 		int success = 0;
 		String sql = "INSERT INTO employees(name, salary, address) VALUES(?,?,?)";
 		try {
-			success = jdbcTemplate.update(sql);
+			success = jdbcTemplate.update(sql, employee.getName(), employee.getSalary(), employee.getAddress());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
