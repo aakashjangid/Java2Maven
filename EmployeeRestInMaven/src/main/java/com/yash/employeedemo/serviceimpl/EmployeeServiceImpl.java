@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.yash.employeedemo.dao.EmployeeDAO;
 import com.yash.employeedemo.model.Employee;
@@ -21,6 +22,10 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	public List<Employee> getAllEmployees() {
 		return employeeDAO.listAllEmployees();
+	}
+
+	public boolean insertFile(MultipartFile file) {
+		return employeeDAO.uploadEmployeesByExcel(file);
 	}
 
 }

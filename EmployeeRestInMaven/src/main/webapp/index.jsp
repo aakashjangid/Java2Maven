@@ -13,15 +13,15 @@
 				<table>
 					<tr>
 						<td>Name</td>
-						<td><input type="text" name="name" required="required"/></td>
+						<td><input type="text" name="name" required="required" /></td>
 					</tr>
 					<tr>
 						<td>Salary</td>
-						<td><input type="number" name="salary" required="required"/></td>
+						<td><input type="number" name="salary" required="required" /></td>
 					</tr>
 					<tr>
 						<td>Address</td>
-						<td><input type="text" name="address" required="required"/></td>
+						<td><input type="text" name="address" required="required" /></td>
 					</tr>
 					<tr>
 						<td colspan="2" align="right"><input type="submit"
@@ -30,6 +30,15 @@
 				</table>
 			</form>
 		</fieldset>
+	</div>
+
+<h3>Add Multiple Employees Using Excel File</h3>
+
+	<div>
+		<form method="POST" action="./uploadFile" enctype="multipart/form-data">
+			<input type="file" name="file" /><input type="submit"
+				value="Upload" />
+		</form>
 	</div>
 </body>
 </html>
