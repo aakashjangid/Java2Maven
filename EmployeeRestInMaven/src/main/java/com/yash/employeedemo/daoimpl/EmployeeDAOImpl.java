@@ -46,28 +46,27 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 		try {
 			success = jdbcTemplate.update(sql, employee.getName(), employee.getSalary(), employee.getAddress());
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 		return success;
 	}
 
 	public List<Employee> listAllEmployees() {
-		List<Employee> employees = new ArrayList<Employee>();
+		List<Employee> employees = new ArrayList<>();
 		String sql = "SELECT * FROM employees";
 		try {
 			employees = jdbcTemplate.query(sql, new EmployeeMapper());
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 		return employees;
 	}
 
 	public boolean uploadEmployeesByExcel(MultipartFile file) {
 
-		try {
-			InputStream inputStream = new BufferedInputStream(file.getInputStream());
+		try (InputStream inputStream = new BufferedInputStream(file.getInputStream());
+				Workbook workbook = WorkbookFactory.create(inputStream)) {
 
-			Workbook workbook = WorkbookFactory.create(inputStream);
 			Sheet sheet = workbook.getSheetAt(0);
 			Row row;
 			Employee employee;
@@ -82,30 +81,27 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 				insert(employee);
 			}
 
-			inputStream.close();
 			return true;
-		} catch (IOException e) {
-			logger.error(e.getMessage());
-		} catch (EncryptedDocumentException e) {
-			logger.error(e.getMessage());
-		} catch (InvalidFormatException e) {
+		} catch (IOException | EncryptedDocumentException | InvalidFormatException e) {
 			logger.error(e.getMessage());
 		}
 
 		return false;
 	}
 
-	@Scheduled(cron = "0 58 15 * * ?")
+	@Scheduled(cron = "0 17 11 * * ?")
 	public void scheduledBackup() {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
-			Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/employeedbbackup", "root",
-					"root");
+		} catch (ClassNotFoundException e) {
+			logger.error(e.getMessage());
+		}
+		try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/employeedbbackup", "root",
+				"root")) {
 			String sql = "INSERT INTO `employeedbbackup`.`backup` SELECT * FROM `employeedb1`.`employees` WHERE id NOT IN (SELECT backup.id FROM `employeedbbackup`.`backup`)";
-			PreparedStatement statement = connection.prepareStatement(sql);
-			statement.execute();
-			statement.close();
-			connection.close();
+			try (PreparedStatement statement = connection.prepareStatement(sql)) {
+				statement.execute();
+			}
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 		}
